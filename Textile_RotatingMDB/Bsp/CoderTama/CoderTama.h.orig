@@ -1,0 +1,80 @@
+
+//------------------------------------------------------------------------------
+
+#ifndef TAMA_CODER_H_
+#define TAMA_CODER_H_
+//-------------------- include files ----------------------------------------
+#include "Driver.h"
+#include "IQmath.h"
+//-------------------- public definitions -----------------------------------
+#define TAMA_MAX_COMM_LENTH            255
+#define TAMA_BAUD                      115200
+
+#define TAMA_Handle										 UART4
+#define TAMA_CLK_ENABLE()						 	 __HAL_RCC_UART4_CLK_ENABLE()
+
+#define TAMA_TX_PIN                    GPIO_PIN_0
+#define TAMA_TX_GPIO_PORT              GPIOA
+#define TAMA_RX_PIN                    GPIO_PIN_1
+#define TAMA_RX_GPIO_PORT              GPIOA
+#define TAMA_EN_PIN                    GPIO_PIN_2
+#define TAMA_EN_GPIO_PORT              GPIOD
+#define TAMA_GPIO_AF                   GPIO_AF8_UART4
+
+#define TAMA_IRQn                      UART4_IRQn
+#define TAMA_IRQHandler                UART4_IRQHandler
+
+#define TAMA_RX_DMA										 DMA1
+#define TAMA_RX_DMA_ClK_ENABLE()			 __HAL_RCC_DMA1_CLK_ENABLE()
+#define TAMA_RX_DMA_STREAM             DMA1_Stream2
+#define TAMA_RX_DMA_CHANNEL  				   DMA_CHANNEL_4
+#define TAMA_RX_DMA_IRQ  							 DMA1_Stream2_IRQn
+#define TAMA_RX_DMA_IRQ_Handler  			 DMA1_Stream2_IRQHandler
+#define TAMA_RX_DMA_IRQ_CLEAR()        DMA1->LIFCR |= 0x3F<<16
+
+#define TAMA_TX_DMA										 DMA1
+#define TAMA_TX_DMA_ClK_ENABLE()			 __HAL_RCC_DMA1_CLK_ENABLE()
+#define TAMA_TX_DMA_STREAM             DMA1_Stream4
+#define TAMA_TX_DMA_CHANNEL  					 DMA_CHANNEL_4
+#define TAMA_TX_DMA_IRQ  							 DMA1_Stream4_IRQn
+#define TAMA_TX_DMA_IRQ_Handler  			 DMA1_Stream4_IRQHandler
+#define TAMA_TX_DMA_IRQ_CLEAR()        DMA1->HIFCR |= 0x3F<<0
+
+
+#define ENCODER_PPR_TAMAGAWA    0x20000
+
+typedef struct {
+
+    _iq _iqLeft;
+    _iq _iqRight;
+    _iq _iqLSin;
+    _iq _iqRSin;
+    _iq _iqR_LSin;
+
+    _iq _iqM_Tan;
+    _iq _iqMean_RL;
+
+} WheelAngle;
+
+#define WheelAngleDefault   {\
+  0, /*_iqLeft;    */    \
+  0, /*_iqRight;    */   \
+  0, /*_iqLSin;  */   \
+  0, /*_iqRSin;   */  \
+  0, /*_iqR_LSin;   */  \
+  0, /*_iqM_Tan;   */    \
+  0 /*_iqMean_RL;   */    \
+}
+
+//-------------------- public data ------------------------------------------
+
+//-------------------- public functions -------------------------------------
+void CoderTama_Init(void);
+void CoderTama_SendQuery(void);
+_iq CoderTama_GetCode(void);
+uint16_t CoderTama_GetCheckFlags(void);
+//-------------------- inline functions -------------------------------------
+
+#endif /* TAMA_CODER_H_ */
+//-----------------------End of file------------------------------------------
+/** @}*/
